@@ -98,8 +98,8 @@ public class AnalizadorLexico
             System.out.println(Tokens);
             ArrayList<String> forRemoval = new ArrayList<String>();
             
-// No veo forma de mostrar error porque tengo que recorrer todos los automatas 
-//con cada palabra que leo, que falle en un automata no significa que sea un error 
+            // No veo forma de mostrar error porque tengo que recorrer todos los automatas 
+            //con cada palabra que leo, que falle en un automata no significa que sea un error 
             for(int i=0; i<TokenAuts.size(); i++)
             {
                 for(String s : Tokens)
