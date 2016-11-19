@@ -31,10 +31,12 @@ public class AnalizadorLexico
  
         AutMaker maker = new AutMaker();
         ArrayList<AFD> KeyAuts = new ArrayList<AFD>();
+        // <editor-fold>
         for(String s : KeyRegexAL)
         {
             KeyAuts.add(maker.MakeAut(s));
         }
+        // </editor-fold>
         ArrayList<AFD> TokenAuts = new ArrayList<AFD>();
         for(String s : TokenRegexAL)
         {
