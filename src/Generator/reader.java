@@ -55,7 +55,7 @@ public class reader
         ArrayList<String> LexerTokenRegex = new ArrayList<String>(); //TOKENS
         ArrayList<AFD> LexerTokenAFD = new ArrayList<AFD>(); //TOKENS
 
-        ArrayList<String> LexerWDSet = new ArrayList<String>(); //WHITESPACE
+        ArrayList<String> LexerWhitespaceDeclarationSet = new ArrayList<String>(); //WHITESPACE
         AFD LexerWDAFD = new AFD(); //WHITESPACE
 
         ArrayList<Produccion> prods = new ArrayList<Produccion>();
@@ -128,28 +128,33 @@ public class reader
                 System.out.println("NOMBRE: " + actual[1]);
                 error = "Correct";
                 count = 2;
+                continue;
             }
 
-            else if (count == 2) //******************************** Characters or Keywords
+            if (count == 2) // Characters or Keywords
             {
                 if (actual.length == 1 && actual[0].equals("CHARACTERS"))
                 {
                     error = "Correct";
                     count = 3;
+                    continue;
                 }
                 else if (actual.length == 1 && actual[0].equals("KEYWORDS"))
                 {
                     error = "Correct";
                     count = 4;
+                    continue;
                 }
                 else if (actual.length == 1 && actual[0].equals("TOKENS"))
                 {
                     error = "Correct";
                     count = 5;
+                    continue;
                 }
                 else if (actual[0].equals("IGNORE"))
                 {
                     count = 6;
+                    continue;
                 }
                 else
                 {
@@ -198,28 +203,32 @@ public class reader
                 }
             }
 
-            else if (count == 3) // CHARACTERS
+            if (count == 3) // CHARACTERS
             {
                 // ---------- SetDecls ----------
                 if (actual.length == 1 && actual[0].equals("KEYWORDS"))
                 {
                     error = "Correct";
                     count = 4;
+                    continue;
                 }
                 else if (actual.length ==1 && actual[0].equals("TOKENS"))
                 {
                     error = "Correct";
                     count = 5;
+                    continue;
                 }
                 else if (actual[0].equals("IGNORE"))
                 {
                     error = "Correct";
                     count = 6;
+                    continue;
                 }
                 else if (actual[0].equals("PRODUCTIONS"))
                 {
                     error = "Correct";
                     count = 7;
+                    continue;
                 }
                 else if (test.CheckIdent(actual[0]))
                 {
@@ -523,26 +532,30 @@ public class reader
                 }
             }
 
-            else if (count == 4) // KEYWORDS
+            if (count == 4) // KEYWORDS
             {
                 //KeyWordDecl
                 ArrayList<String> KeySet = new ArrayList<String>();
                 if (actual[0].equals("TOKENS"))
                 {
                     count = 5;
+                    continue;
                 }
                 else if (actual[0].equals("IGNORE"))
                 {
                     count = 6;
+                    continue;
                 }
                 else if (actual[0].equals("PRODUCTIONS"))
                 {
                     error = "Correct";
                     count = 7;
+                    continue;
                 }
                 else if (actual[0].equals("END"))
                 {
                     count = 8;
+                    continue;
                 }
                 else if (test.CheckIdent(actual[0]))
                 {
@@ -601,22 +614,25 @@ public class reader
                 }
             }
 
-            else if (count == 5) // TOKENS
+            if (count == 5) // TOKENS
             {
                 if (actual[0].equals("IGNORE"))
                 {
                     error = "Correct";
                     count = 6;
+                    continue;
                 }
                 else if (actual[0].equals("PRODUCTIONS"))
                 {
                     error = "Correct";
                     count = 7;
+                    continue;
                 }
                 else if (actual[0].equals("END"))
                 {
                     error = "Correct";
                     count = 8;
+                    continue;
                 }
                 else if (test.CheckIdent(actual[0]))
                 {
@@ -713,37 +729,35 @@ public class reader
                 }
             }
 
-            else if (count == 6)
+            if (count == 6) // IGNORE, Whitespace declaration
             {
-                System.out.println("About to process INGORE statement");
-                System.exit(0);
-
                 if (actual[0].equals("PRODUCTIONS"))
                 {
                     error = "Correct";
                     count = 7;
+                    continue;
                 }
 
-                else if (actual[0].equals("IGNORE")) //WHITESPACES declaration
+                else if (actual[0].equals("IGNORE")) // WHITESPACES declaration
                 {
                     if (actual[1].equals("."))
                     {
                         error = "Correct";
                         count = 7;
+                        continue;
                     }
                     else
                     {
-                       ArrayList<String> set = new ArrayList<String>();
+                        ArrayList<String> set = new ArrayList<String>();
                         String SimboloOCoso = "simbolo";
                         String AddOrNot = "Add";
                         String LexerWDId = "Ignore";
-                        for(int i=1; i<actual.length-1; i++)//set
-                        {
 
+                        for (int i=1; i < actual.length-1; i++)
+                        {
                             if (SimboloOCoso.equals("simbolo"))
                             {
-                                System.out.println("SIMBOLO");
-
+                                // System.out.println("SIMBOLO");
                                 if (test.CheckString(actual[i]))
                                 {
                                     ArrayList<String> string  = maker.StringToSet(actual[i]);
@@ -755,9 +769,9 @@ public class reader
                                     {
                                         set.removeAll(string);
                                     }
-                                    System.out.println("STRING");
+
+                                    // System.out.println("STRING");
                                     SimboloOCoso = "coso";
-                                    count = 7;
                                 }
                                 else if (test.CheckIdent(actual[i]))
                                 {
@@ -772,18 +786,15 @@ public class reader
                                         {
                                             set.removeAll(LexerSets.get(search));
                                         }
-
                                     }
                                     System.out.println("IDENT");
                                     SimboloOCoso = "coso";
-                                    count = 7;
                                 }
                                 else if (test.CheckChara(actual[i]))
                                 {
                                     System.out.println("CHARA HASTA AHORA");
                                     SimboloOCoso = "coso";
                                     set.add(String.valueOf(actual[i].charAt(1)));
-                                    count = 7;
 
                                     if (i<actual.length)
                                     {
@@ -803,9 +814,9 @@ public class reader
                                                     {
                                                         set.removeAll(string);
                                                     }
+
                                                     i = i+2;
                                                     SimboloOCoso = "coso";
-                                                    count = 7;
                                                 }
                                                 else
                                                 {
@@ -855,7 +866,6 @@ public class reader
                                     System.out.println(error);
                                     System.exit(0);
                                 }
-
                             }
                             else if (SimboloOCoso.equals("coso"))
                             {
@@ -880,9 +890,10 @@ public class reader
                             }
                         }
                         ArrayList<String> list = new ArrayList<String>(new LinkedHashSet<String>(set));
-                        LexerWDSet = list;
+                        LexerWhitespaceDeclarationSet = list;
                         AFD toAdd = maker.CharacterSetToAFD(list, LexerWDId);
                         LexerWDAFD = toAdd;
+
                         if (actual[actual.length-1].equals("."))
                         {
                             //correct
@@ -895,13 +906,16 @@ public class reader
                             error="Error, '.' expected at end of line, line: " + String.valueOf(numbah.get(lin));
                             System.out.println(error);
                             System.exit(0);
-                        } 
+                        }
+
+                        count = 7;
+                        continue;
                     }
                 }
             }
 
-            //Parser Specification
-            else if (count == 7)
+            // Parser Specification
+            if (count == 7)
             {
                 String cabeza = "";
                 ArrayList<String> cuerpo = new ArrayList<String>();
@@ -911,6 +925,7 @@ public class reader
                 {
                     error = "correct";
                     count = 8;
+                    continue;
                 }
                 else if (test.CheckIdent(actual[0]))
                 {
@@ -999,7 +1014,7 @@ public class reader
                 }
             }
 
-            else if (count == 8)
+            if (count == 8)
             {
                 if (actual.length == 3)
                 {
@@ -1075,7 +1090,7 @@ public class reader
             LexerTokenAFD.add(aut);
         }
 
-        for (String s : LexerWDSet)
+        for (String s : LexerWhitespaceDeclarationSet)
         {
             if (s.equals(String.valueOf((char) 10)))
             {
@@ -1087,17 +1102,18 @@ public class reader
             }
         }
 
-        System.out.println(LexerWDSet);
-
         boolean enable = false;
 
+        System.out.println(LexerWhitespaceDeclarationSet.size());
+        System.exit(0);
+
         // TODO: Evaluar si esto debe irse a la fregada
-        if (LexerWDSet.size() == 0)
+        if (LexerWhitespaceDeclarationSet.size() == 0)
         {
-            LexerWDSet.add("\\n");
-            LexerWDSet.add("\\r");
-            LexerWDSet.add(" ");
-            LexerWDSet.add("    ");
+            LexerWhitespaceDeclarationSet.add("\\n");
+            LexerWhitespaceDeclarationSet.add("\\r");
+            LexerWhitespaceDeclarationSet.add(" ");
+            LexerWhitespaceDeclarationSet.add("    ");
         }
         else
         {
@@ -1106,7 +1122,7 @@ public class reader
 
         Lexer Lex = new Lexer(
             EKToken,
-            LexerWDSet,
+            LexerWhitespaceDeclarationSet,
             NOMBRE,
             LexerAFD,
             LexerKeyAFD,
