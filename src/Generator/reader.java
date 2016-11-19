@@ -1,4 +1,3 @@
-
 package Generator;
 
 import Reader.AFD;
@@ -9,7 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 
-public class reader 
+public class reader
 {
     public static void main(String[] args) throws FileNotFoundException, IOException
     {
@@ -23,17 +22,14 @@ public class reader
         String line;
         BufferedReader in;
         int count;
-        int linea=1;
+        int linea = 1;
         String NOMBRE = "";
-        //Test.txt
-        //TokenTest1.txt
-        //Java.txt
-        
+
         in = new BufferedReader(new FileReader("Java.txt"));
         ArrayList<String> saved = new ArrayList<String>();
         ArrayList<String[]> words = new ArrayList<String[]>();
         ArrayList<Integer> numbah = new ArrayList<Integer>();
-        
+
         ArrayList<String> LexerIds = new ArrayList<String>(); //Characters
         LexerIds.add("letter");
         LexerIds.add("digit");
@@ -41,108 +37,102 @@ public class reader
         LexerIds.add("AnyButApostrophe");
         LexerIds.add("ANY");
 
-        ArrayList<ArrayList<String>> LexerSets = new ArrayList<ArrayList<String>>();//Characters
+        ArrayList<ArrayList<String>> LexerSets = new ArrayList<ArrayList<String>>(); //Characters
         LexerSets.add(test.letterAL);
         LexerSets.add(test.digitAL);
         LexerSets.add(test.anybutquoteAL);
         LexerSets.add(test.anybutapostropheAL);
         LexerSets.add(test.anyAL);
-        ArrayList<AFD> LexerAFD = new ArrayList<AFD>();//Characters
+        ArrayList<AFD> LexerAFD = new ArrayList<AFD>(); //Characters
+
+        ArrayList<String> LexerKeyIds = new ArrayList<String>(); //Keywords
+        ArrayList<ArrayList<String>> LexerKeySets = new ArrayList<ArrayList<String>>(); //Keywords
+        ArrayList<String> LexerKeyRegex = new ArrayList<String>(); //Keywords
+        ArrayList<AFD> LexerKeyAFD = new ArrayList<AFD>(); //Keywords
         
-        ArrayList<String> LexerKeyIds = new ArrayList<String>();//Keywords
-        ArrayList<ArrayList<String>> LexerKeySets = new ArrayList<ArrayList<String>>();//Keywords
-        ArrayList<String> LexerKeyRegex = new ArrayList<String>();//Keywords
-        ArrayList<AFD> LexerKeyAFD = new ArrayList<AFD>();//Keywords
-        
-        ArrayList<String> LexerTokenIds = new ArrayList<String>();//TOKENS
-        ArrayList<Boolean> EKToken = new ArrayList<Boolean>();//TOKENS
-        ArrayList<String> LexerTokenRegex = new ArrayList<String>();//TOKENS
-        ArrayList<AFD> LexerTokenAFD = new ArrayList<AFD>();//TOKENS
-        
-        ArrayList<String> LexerWDSet = new ArrayList<String>();//WHITESPACE
-        AFD LexerWDAFD = new AFD();//WHITESPACE
-        
-        
+        ArrayList<String> LexerTokenIds = new ArrayList<String>(); //TOKENS
+        ArrayList<Boolean> EKToken = new ArrayList<Boolean>(); //TOKENS
+        ArrayList<String> LexerTokenRegex = new ArrayList<String>(); //TOKENS
+        ArrayList<AFD> LexerTokenAFD = new ArrayList<AFD>(); //TOKENS
+
+        ArrayList<String> LexerWDSet = new ArrayList<String>(); //WHITESPACE
+        AFD LexerWDAFD = new AFD(); //WHITESPACE
+
         ArrayList<Produccion> prods = new ArrayList<Produccion>();
         AutMaker maker = new AutMaker();
-        
+
         line = in.readLine();
         String error = "Error";
         String id = "";
-        
-        while(line != null)
+
+        while (line != null)
         {
             if (line.replace(" ","").replace("\t", "").equals("") == false)
-            { 
+            {
                 saved.add(line.trim());
-                numbah.add(linea);    
+                numbah.add(linea);
             }
+
             line = in.readLine();
             linea++;
         }
 
-        for(String leer : saved)
+        for (String leer : saved)
         {
-           //"([^\"]\\S*|\".+?\")\\s*" nueva
-           //"[ ]+(?=([^\"]*\"(?:\"|[^\"])*\")*[^\"]*$)" vieja
-           // (?:(['"])(.*?)(?<!\\)(?>\\\\)*\1|([^\s]+)) try
-           String[] set = leer.split("[ ]+(?=([^\\\"]*\\\"(?:\\\"|[^\\\"])*\\\")*[^\\\"]*$)");
-           
-           for(String s : set)
-           {
-               System.out.println(s);
-           }
+            // TODO: Averiguar por qué rayos estoy haciendo esto y explicarselo a Héctor
+            //"([^\"]\\S*|\".+?\")\\s*" nueva
+            //"[ ]+(?=([^\"]*\"(?:\"|[^\"])*\")*[^\"]*$)" vieja
+            // (?:(['"])(.*?)(?<!\\)(?>\\\\)*\1|([^\s]+)) try
+            String[] set = leer.split("[ ]+(?=([^\\\"]*\\\"(?:\\\"|[^\\\"])*\\\")*[^\\\"]*$)");
+
+           // Debugging stuff
+           // for (String s : set)
+           // {
+           //     System.out.println(s);
+           // }
+
            words.add(set);
-           
         }
+
         count = 1;
         String[] actual;
-        
+
         // Recorer el listado de palabras de la gramática recibida y alimentar
         // las estructuras definidas arriba
-        for(int lin=0; lin < saved.size(); lin++)
+        for (int lin = 0; lin < saved.size(); lin++)
         {
             actual = words.get(lin);
-            
-            if(count == 1)//COMPILER name
+
+            if (count == 1) // COMPILER name
             {
-                if(actual.length == 2)
-                {
-                    if(actual[0].equals("COMPILER"))
-                    {
-                        error = "Correct";
-                        if(test.CheckIdent(actual[1]))
-                        {
-                            //Correct
-                            NOMBRE = actual[1];
-                            System.out.println("NOMBRE: " + actual[1]);
-                            error = "Correct";
-                            count++;
-                        }
-                        else
-                        {
-                            error = "Error, ID not valid, line: " + String.valueOf(numbah.get(lin));
-                            System.out.println(error);
-                            System.exit(0);
-                        }
-                    }
-                    else
-                    {
-                        error="Error,'COMPILER' expected, line: " + String.valueOf(numbah.get(lin));
-                        System.out.println(error);
-                        System.exit(0);
-                    }
-                }
-                else
-                {
-                    error="Error,'COMPILER' *name* expected, name can't contain more than 1 word line: " + String.valueOf(numbah.get(lin));
-                    System.out.println(error);
-                    System.exit(0);
-                }
+                coolAssert(
+                    actual.length == 2,
+                    "Error,'COMPILER' *name* expected, name can't contain more than 1 word",
+                    numbah.get(lin)
+                );
+
+                coolAssert(
+                    actual[0].equals("COMPILER"),
+                    "Error,'COMPILER' expected",
+                    numbah.get(lin)
+                );
+
+                coolAssert(
+                    test.CheckIdent(actual[1]),
+                    "Error, ID not valid",
+                    numbah.get(lin)
+                );
+
+                // Correct
+                NOMBRE = actual[1];
+                System.out.println("NOMBRE: " + actual[1]);
+                error = "Correct";
+                count++;
             }
-            else if(count == 2)//********************************Characters or Keywords
+
+            else if (count == 2)//********************************Characters or Keywords
             {
-                if(actual.length == 1 && actual[0].equals("CHARACTERS"))
+                if (actual.length == 1 && actual[0].equals("CHARACTERS"))
                 {
                     error = "Correct";
                     count = 3;
@@ -163,13 +153,13 @@ public class reader
                 }
                 else
                 {
-                    if(actual.length == 3)
+                    if (actual.length == 3)
                     {
-                        if(actual[0].equals("END"))
+                        if (actual[0].equals("END"))
                         {
-                            if(actual[1].equals(NOMBRE))
+                            if (actual[1].equals(NOMBRE))
                             {
-                                if(actual[2].equals("."))
+                                if (actual[2].equals("."))
                                 {
                                     //correct
                                     error = "Correct";
@@ -206,11 +196,11 @@ public class reader
                         System.exit(0);
                     }
                 }
-                
             }
-            else if(count == 3) // CHARACTERS
+
+            else if (count == 3) // CHARACTERS
             {
-                //----------------------------------------------SetDecls----------------------------------------------------------------------------
+                // ---------- SetDecls ----------
                 if (actual.length == 1 && actual[0].equals("KEYWORDS"))
                 {
                     error = "Correct";
@@ -231,13 +221,13 @@ public class reader
                     error = "Correct";
                     count = 7;
                 }
-                else if(test.CheckIdent(actual[0]))
+                else if (test.CheckIdent(actual[0]))
                 {
                     System.out.println("Ident");
                     id = actual[0];
                     LexerIds.add(actual[0]);
                     
-                    if(actual[1].equals("="))
+                    if (actual[1].equals("="))
                     {
                         System.out.println("Ident =");
                         ArrayList<String> set = new ArrayList<String>();
@@ -247,17 +237,17 @@ public class reader
                         for(int i=2; i<actual.length-1; i++)//set
                         {
 
-                            if(SimboloOCoso.equals("simbolo"))
+                            if (SimboloOCoso.equals("simbolo"))
                             {
                                 System.out.println("SIMBOLO");
-                                if(test.CheckString(actual[i]))
+                                if (test.CheckString(actual[i]))
                                 {
                                     ArrayList<String> string  = maker.StringToSet(actual[i]);
-                                    if(AddOrNot.equals("Add"))
+                                    if (AddOrNot.equals("Add"))
                                     {
                                         set.addAll(string);
                                     }
-                                    else if(AddOrNot.equals("Not"))
+                                    else if (AddOrNot.equals("Not"))
                                     {
                                         set.removeAll(string);
                                     }
@@ -269,13 +259,13 @@ public class reader
                                 {
                                     
                                     int search = LexerIds.indexOf(actual[i]);
-                                    if(search != -1 && search <= LexerSets.size())
+                                    if (search != -1 && search <= LexerSets.size())
                                     {
-                                        if(AddOrNot.equals("Add"))
+                                        if (AddOrNot.equals("Add"))
                                         {
                                             set.addAll(LexerSets.get(search));
                                         }
-                                        else if(AddOrNot.equals("Not"))
+                                        else if (AddOrNot.equals("Not"))
                                         {
                                             set.removeAll(LexerSets.get(search));
                                         }
@@ -289,21 +279,21 @@ public class reader
                                     System.out.println("CHARA HASTA AHORA");
                                     SimboloOCoso = "coso";
                                     
-                                    if(i<actual.length)
+                                    if (i<actual.length)
                                     {
-                                        if(actual[i+1].equals(".."))
+                                        if (actual[i+1].equals(".."))
                                         {
-                                            if(i<actual.length)
+                                            if (i<actual.length)
                                             {
-                                                if(test.CheckChara(actual[i+2]))   
+                                                if (test.CheckChara(actual[i+2]))   
                                                 {
                                                     maker.CharasToSet(actual[i], actual[i+2]);
                                                     ArrayList<String> string  = maker.CharasToSet(actual[i], actual[i+2]);
-                                                    if(AddOrNot.equals("Add"))
+                                                    if (AddOrNot.equals("Add"))
                                                     {
                                                         set.addAll(string);
                                                     }
-                                                    else if(AddOrNot.equals("Not"))
+                                                    else if (AddOrNot.equals("Not"))
                                                     {
                                                         set.removeAll(string);
                                                     }
@@ -330,24 +320,24 @@ public class reader
                                         }
                                         else if (actual[i+1].equals("+"))
                                         {
-                                            if(String.valueOf(actual[i].charAt(0)).equals("'"))
+                                            if (String.valueOf(actual[i].charAt(0)).equals("'"))
                                             {
                                                 set.add(String.valueOf(actual[i].charAt(1)));
                                             }
-                                            else if(String.valueOf(actual[i].charAt(0)).equals("C"))
+                                            else if (String.valueOf(actual[i].charAt(0)).equals("C"))
                                             {
-                                                if(String.valueOf(actual[i].charAt(1)).equals("H"))
+                                                if (String.valueOf(actual[i].charAt(1)).equals("H"))
                                                 {
-                                                    if(String.valueOf(actual[i].charAt(2)).equals("R"))
+                                                    if (String.valueOf(actual[i].charAt(2)).equals("R"))
                                                     {
-                                                        if(String.valueOf(actual[i].charAt(3)).equals("("))
+                                                        if (String.valueOf(actual[i].charAt(3)).equals("("))
                                                         {
                                                             int inde = 4;
                                                             String num = "";
                                                             while(String.valueOf(actual[i].charAt(inde)).equals(")") == false)
                                                             {
                                                                 num = num + String.valueOf(actual[i].charAt(inde));
-                                                                if(test.CheckNumber(num))
+                                                                if (test.CheckNumber(num))
                                                                 {
                                                                     //do nothing
                                                                 }
@@ -372,24 +362,24 @@ public class reader
                                         }
                                         else if (actual[i+1].equals("-"))
                                         {
-                                            if(String.valueOf(actual[i].charAt(0)).equals("'"))
+                                            if (String.valueOf(actual[i].charAt(0)).equals("'"))
                                             {
                                                 set.add(String.valueOf(actual[i].charAt(1)));
                                             }
-                                            else if(String.valueOf(actual[i].charAt(0)).equals("C"))
+                                            else if (String.valueOf(actual[i].charAt(0)).equals("C"))
                                             {
-                                                if(String.valueOf(actual[i].charAt(1)).equals("H"))
+                                                if (String.valueOf(actual[i].charAt(1)).equals("H"))
                                                 {
-                                                    if(String.valueOf(actual[i].charAt(2)).equals("R"))
+                                                    if (String.valueOf(actual[i].charAt(2)).equals("R"))
                                                     {
-                                                        if(String.valueOf(actual[i].charAt(3)).equals("("))
+                                                        if (String.valueOf(actual[i].charAt(3)).equals("("))
                                                         {
                                                             int inde = 4;
                                                             String num = "";
                                                             while(String.valueOf(actual[i].charAt(inde)).equals(")") == false)
                                                             {
                                                                 num = num + String.valueOf(actual[i].charAt(inde));
-                                                                if(test.CheckNumber(num))
+                                                                if (test.CheckNumber(num))
                                                                 {
                                                                     //do nothing
                                                                 }
@@ -412,26 +402,26 @@ public class reader
                                             SimboloOCoso = "coso";
                                             
                                         }
-                                        else if(actual[i+1].equals("."))
+                                        else if (actual[i+1].equals("."))
                                         {
-                                            if(String.valueOf(actual[i].charAt(0)).equals("'"))
+                                            if (String.valueOf(actual[i].charAt(0)).equals("'"))
                                             {
                                                 set.add(String.valueOf(actual[i].charAt(1)));
                                             }
-                                            else if(String.valueOf(actual[i].charAt(0)).equals("C"))
+                                            else if (String.valueOf(actual[i].charAt(0)).equals("C"))
                                             {
-                                                if(String.valueOf(actual[i].charAt(1)).equals("H"))
+                                                if (String.valueOf(actual[i].charAt(1)).equals("H"))
                                                 {
-                                                    if(String.valueOf(actual[i].charAt(2)).equals("R"))
+                                                    if (String.valueOf(actual[i].charAt(2)).equals("R"))
                                                     {
-                                                        if(String.valueOf(actual[i].charAt(3)).equals("("))
+                                                        if (String.valueOf(actual[i].charAt(3)).equals("("))
                                                         {
                                                             int inde = 4;
                                                             String num = "";
                                                             while(String.valueOf(actual[i].charAt(inde)).equals(")") == false)
                                                             {
                                                                 num = num + String.valueOf(actual[i].charAt(inde));
-                                                                if(test.CheckNumber(num))
+                                                                if (test.CheckNumber(num))
                                                                 {
                                                                     //do nothing
                                                                 }
@@ -473,15 +463,15 @@ public class reader
                                 }
                                 
                             }
-                            else if(SimboloOCoso.equals("coso"))
+                            else if (SimboloOCoso.equals("coso"))
                             {
                                 System.out.println("COSO");
-                                if(actual[i].equals("+"))
+                                if (actual[i].equals("+"))
                                 {
                                     AddOrNot = "Add";
                                     SimboloOCoso = "simbolo";
                                 }
-                                else if(actual[i].equals("-"))
+                                else if (actual[i].equals("-"))
                                 {
                                     AddOrNot = "Not";
                                     SimboloOCoso = "simbolo";
@@ -502,7 +492,7 @@ public class reader
                         AFD toAdd = maker.CharacterSetToAFD(list, id);
                         LexerAFD.add(toAdd);
                         //**********************************************END IF*********************************************************************
-                        if(actual[actual.length-1].equals("."))
+                        if (actual[actual.length-1].equals("."))
                         {
                             //correct
                             error = "Correct";
@@ -532,9 +522,8 @@ public class reader
                     System.exit(0);
                 }
             }
-                
-            
-            else if(count == 4)
+
+            else if (count == 4) // KEYWORDS
             {
                 //KeyWordDecl
                 ArrayList<String> KeySet = new ArrayList<String>();
@@ -555,18 +544,18 @@ public class reader
                 {
                     count = 8;
                 }
-                else if(test.CheckIdent(actual[0]))
+                else if (test.CheckIdent(actual[0]))
                 {
                     String keyId = actual[0];
                     LexerKeyIds.add(actual[0]);
                     System.out.println("Ident");
-                    if(actual[1].equals("="))
+                    if (actual[1].equals("="))
                     {
                         System.out.println("Ident =");
-                        if(test.CheckString(actual[2]))
+                        if (test.CheckString(actual[2]))
                         {
                             System.out.println("STRING");
-                            if(actual[3].equals("."))
+                            if (actual[3].equals("."))
                             {
                                 //correct
                                 KeySet = maker.StringToSet(actual[2]);
@@ -610,11 +599,10 @@ public class reader
                     System.out.println(error);
                     System.exit(0);
                 }
-                
             }
-            else if(count == 5)
+
+            else if (count == 5) // TOKENS
             {
-                
                 if (actual[0].equals("IGNORE"))
                 {
                     error = "Correct";
@@ -625,15 +613,15 @@ public class reader
                     error = "Correct";
                     count = 7;
                 }
-                else if(actual[0].equals("END"))
+                else if (actual[0].equals("END"))
                 {
                     error = "Correct";
                     count = 8;
                 }
-                else if(test.CheckIdent(actual[0]))
+                else if (test.CheckIdent(actual[0]))
                 {
                     LexerTokenIds.add(actual[0]);
-                     if(actual[1].equals("="))
+                     if (actual[1].equals("="))
                     {
                         System.out.println("Ident =");
                         ArrayList<String> TE = new ArrayList<String>();
@@ -642,15 +630,15 @@ public class reader
                             TE.add(actual[i]);
                         }
                         //System.out.println(TE);
-                        if(TE.get(TE.size()-1).equals("."))
+                        if (TE.get(TE.size()-1).equals("."))
                         {
                             TE.remove(TE.size()-1);
                             
-                            if(TE.get(TE.size()-1).equals("KEYWORDS"))
+                            if (TE.get(TE.size()-1).equals("KEYWORDS"))
                             {
                                 System.out.println("KEYWORDS");
                                 TE.remove(TE.size()-1);
-                                if(TE.get(TE.size()-1).equals("EXCEPT"))
+                                if (TE.get(TE.size()-1).equals("EXCEPT"))
                                 {
                                     System.out.println("EXCEPT");
                                     TE.remove(TE.get(TE.size()-1));
@@ -684,11 +672,11 @@ public class reader
                             System.exit(0);
                         }
                     }
-                    else  if(actual[1].equals("EXCEPT"))
+                    else  if (actual[1].equals("EXCEPT"))
                     {
-                        if(actual[2].equals("KEYWORDS"))
+                        if (actual[2].equals("KEYWORDS"))
                         {
-                            if(actual[3].equals("."))
+                            if (actual[3].equals("."))
                             {
                                 //correct
                             }
@@ -706,7 +694,7 @@ public class reader
                             System.exit(0);
                         }
                     }
-                    else if(actual[1].equals("."))
+                    else if (actual[1].equals("."))
                     {
                         //correct
                     }
@@ -724,16 +712,21 @@ public class reader
                     System.exit(0);
                 }
             }
-            else if(count == 6)
+
+            else if (count == 6)
             {
+                System.out.println("About to process INGORE statement");
+                System.exit(0);
+
                 if (actual[0].equals("PRODUCTIONS"))
                 {
                     error = "Correct";
                     count = 7;
                 }
-                else if(actual[0].equals("IGNORE"))//WHITESPACE
+
+                else if (actual[0].equals("IGNORE"))//WHITESPACE
                 {
-                    if(actual[1].equals("."))
+                    if (actual[1].equals("."))
                     {
                         error = "Correct";
                         count = 7;
@@ -747,18 +740,18 @@ public class reader
                         for(int i=1; i<actual.length-1; i++)//set
                         {
 
-                            if(SimboloOCoso.equals("simbolo"))
+                            if (SimboloOCoso.equals("simbolo"))
                             {
                                 System.out.println("SIMBOLO");
 
-                                if(test.CheckString(actual[i]))
+                                if (test.CheckString(actual[i]))
                                 {
                                     ArrayList<String> string  = maker.StringToSet(actual[i]);
-                                    if(AddOrNot.equals("Add"))
+                                    if (AddOrNot.equals("Add"))
                                     {
                                         set.addAll(string);
                                     }
-                                    else if(AddOrNot.equals("Not"))
+                                    else if (AddOrNot.equals("Not"))
                                     {
                                         set.removeAll(string);
                                     }
@@ -769,13 +762,13 @@ public class reader
                                 else if (test.CheckIdent(actual[i]))
                                 {
                                     int search = LexerIds.indexOf(actual[i]);
-                                    if(search != -1 && search <= LexerSets.size())
+                                    if (search != -1 && search <= LexerSets.size())
                                     {
-                                        if(AddOrNot.equals("Add"))
+                                        if (AddOrNot.equals("Add"))
                                         {
                                             set.addAll(LexerSets.get(search));
                                         }
-                                        else if(AddOrNot.equals("Not"))
+                                        else if (AddOrNot.equals("Not"))
                                         {
                                             set.removeAll(LexerSets.get(search));
                                         }
@@ -792,21 +785,21 @@ public class reader
                                     set.add(String.valueOf(actual[i].charAt(1)));
                                     count = 7;
 
-                                    if(i<actual.length)
+                                    if (i<actual.length)
                                     {
-                                        if(actual[i+1].equals(".."))
+                                        if (actual[i+1].equals(".."))
                                         {
-                                            if(i<actual.length)
+                                            if (i<actual.length)
                                             {
-                                                if(test.CheckChara(actual[i+2]))   
+                                                if (test.CheckChara(actual[i+2]))   
                                                 {
                                                     maker.CharasToSet(actual[i], actual[i+2]);
                                                     ArrayList<String> string  = maker.CharasToSet(actual[i], actual[i+2]);
-                                                    if(AddOrNot.equals("Add"))
+                                                    if (AddOrNot.equals("Add"))
                                                     {
                                                         set.addAll(string);
                                                     }
-                                                    else if(AddOrNot.equals("Not"))
+                                                    else if (AddOrNot.equals("Not"))
                                                     {
                                                         set.removeAll(string);
                                                     }
@@ -864,15 +857,15 @@ public class reader
                                 }
 
                             }
-                            else if(SimboloOCoso.equals("coso"))
+                            else if (SimboloOCoso.equals("coso"))
                             {
                                 System.out.println("COSO");
-                                if(actual[i].equals("+"))
+                                if (actual[i].equals("+"))
                                 {
                                     AddOrNot = "Add";
                                     SimboloOCoso = "simbolo";
                                 }
-                                else if(actual[i].equals("-"))
+                                else if (actual[i].equals("-"))
                                 {
                                     AddOrNot = "Not";
                                     SimboloOCoso = "simbolo";
@@ -890,7 +883,7 @@ public class reader
                         LexerWDSet = list;
                         AFD toAdd = maker.CharacterSetToAFD(list, LexerWDId);
                         LexerWDAFD = toAdd;
-                        if(actual[actual.length-1].equals("."))
+                        if (actual[actual.length-1].equals("."))
                         {
                             //correct
                             error = "Correct";
@@ -936,7 +929,7 @@ public class reader
                                     TE.add(actual[i]);
                                     
                                 }
-                                if(TE.get(TE.size()-1).equals("."))
+                                if (TE.get(TE.size()-1).equals("."))
                                 {
                                     TE.remove(TE.size()-1);
                                     test.ParserExpression(TE);
@@ -945,14 +938,14 @@ public class reader
                                 }
                             }
                         }
-                        else if(actual[2].equals("="))
+                        else if (actual[2].equals("="))
                         {
                             ArrayList<String> TE = new ArrayList<String>();
                             for(int i=3; i<actual.length; i++)//set
                             {
                                 TE.add(actual[i]);
                             }
-                            if(TE.get(TE.size()-1).equals("."))
+                            if (TE.get(TE.size()-1).equals("."))
                             {
                                 TE.remove(TE.size()-1);
                                 test.ParserExpression(TE);
@@ -961,16 +954,16 @@ public class reader
                             }
                         }
                     }
-                    else if(test.CheckSemAction(actual[1]))
+                    else if (test.CheckSemAction(actual[1]))
                     {
-                        if(actual[2].equals("="))
+                        if (actual[2].equals("="))
                         {
                             ArrayList<String> TE = new ArrayList<String>();
                             for(int i=3; i<actual.length; i++)//set
                             {
                                 TE.add(actual[i]);
                             }
-                            if(TE.get(TE.size()-1).equals("."))
+                            if (TE.get(TE.size()-1).equals("."))
                             {
                                 TE.remove(TE.size()-1);
                                 test.ParserExpression(TE);
@@ -979,7 +972,7 @@ public class reader
                             }
                         }
                     }
-                    else if(actual[1].equals("="))
+                    else if (actual[1].equals("="))
                     {
                         System.out.println("==");
                         ArrayList<String> TE = new ArrayList<String>();
@@ -987,7 +980,7 @@ public class reader
                         {
                             TE.add(actual[i]);
                         }
-                        if(TE.get(TE.size()-1).equals("."))
+                        if (TE.get(TE.size()-1).equals("."))
                         {
                             System.out.println("QUITE PUNTO");
                             TE.remove(TE.size()-1);
@@ -999,21 +992,22 @@ public class reader
                         
                 }
 
-                if(cabeza.equals("") == false)
+                if (cabeza.equals("") == false)
                 {
                     Produccion prod = new Produccion(cabeza, cuerpo); 
                     prods.add(prod);
                 }
             }
-            else if(count == 8)
+
+            else if (count == 8)
             {
-                if(actual.length == 3)
+                if (actual.length == 3)
                 {
-                    if(actual[0].equals("END"))
+                    if (actual[0].equals("END"))
                     {
-                        if(actual[1].equals(NOMBRE))
+                        if (actual[1].equals(NOMBRE))
                         {
-                            if(actual[2].equals("."))
+                            if (actual[2].equals("."))
                             {
                                 //correct
                                 error = "Correct";
@@ -1053,7 +1047,9 @@ public class reader
         }
 
         Gramatica gram = new Gramatica(prods);
+
         gram.toScreen();
+
         System.out.println(error);
 
         for (int i=0; i < LexerTokenIds.size(); i++)
@@ -1069,7 +1065,6 @@ public class reader
             System.out.println(r);
         }
 
-        //System.out.println(LexerTokenRegex);
         System.out.println(EKToken);
 
         for (int i=0; i < LexerTokenRegex.size(); i++)
@@ -1082,19 +1077,21 @@ public class reader
 
         for (String s : LexerWDSet)
         {
-            if(s.equals(String.valueOf((char) 10)))
+            if (s.equals(String.valueOf((char) 10)))
             {
                 s = "\\" +"n";
             }
-            else if(s.equals(String.valueOf((char) 13)))
+            else if (s.equals(String.valueOf((char) 13)))
             {
                 s = "\\"+"r";
             }
         }
 
         System.out.println(LexerWDSet);
+
         boolean enable = false;
 
+        // TODO: Evaluar si esto debe irse a la fregada
         if (LexerWDSet.size() == 0)
         {
             LexerWDSet.add("\\n");
@@ -1106,7 +1103,7 @@ public class reader
         {
             enable = false;
         }
-        
+
         Lexer Lex = new Lexer(
             EKToken,
             LexerWDSet,
@@ -1124,8 +1121,14 @@ public class reader
         );
 
         Lex.GenerarAnalizador();
-        //Lexer Lex = new Lexer(LexerWDSet, NOMBRE, LexerAFD, LexerKeyAFD, LexerIds, LexerKeyIds, LexerKeySets);
-        //Lexer Lex = new Lexer(NOMBRE, LexerAFD, LexerKeyAFD, LexerIds, LexerKeyIds, LexerKeySets, true);
-        //Lex.Lexear("Acomp.txt");   
+    }
+
+    public static void coolAssert(boolean expression, String message, int lineNumber)
+    {
+        if (!expression) {
+            System.out.println(message);
+            System.out.println("Source line: " + lineNumber);
+            System.exit(0);
+        }
     }
 }
