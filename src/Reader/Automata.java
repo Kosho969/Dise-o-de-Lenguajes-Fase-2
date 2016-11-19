@@ -294,7 +294,8 @@ public class Automata
         writer.println("}");
         writer.close();
         Runtime rt = Runtime.getRuntime();
-        Process pr = rt.exec("C:\\Program Files (x86)\\Graphviz2.38\\bin\\dot -Tpng C:\\Users\\juankboix1309\\Documents\\NetBeansProjects\\ThompsonConstruction\\" + fileName + ".dot -o C:\\Users\\juankboix1309\\Documents\\NetBeansProjects\\ThompsonConstruction\\" + fileName + ".png");
+        
+        Process pr = rt.exec("C:\\Program Files (x86)\\Graphviz2.38\\bin\\dot -Tpng C:\\Users\\Pablo\\Documents\\NetBeansProjects\\ThompsonConstruction\\" + fileName + ".dot -o C:\\Users\\Pablo\\Documents\\NetBeansProjects\\ThompsonConstruction\\" + fileName + ".png");
     }
     
     public String getEstadosFinal()
