@@ -127,10 +127,10 @@ public class reader
                 NOMBRE = actual[1];
                 System.out.println("NOMBRE: " + actual[1]);
                 error = "Correct";
-                count++;
+                count = 2;
             }
 
-            else if (count == 2)//********************************Characters or Keywords
+            else if (count == 2) //******************************** Characters or Keywords
             {
                 if (actual.length == 1 && actual[0].equals("CHARACTERS"))
                 {
@@ -724,7 +724,7 @@ public class reader
                     count = 7;
                 }
 
-                else if (actual[0].equals("IGNORE"))//WHITESPACE
+                else if (actual[0].equals("IGNORE")) //WHITESPACES declaration
                 {
                     if (actual[1].equals("."))
                     {
