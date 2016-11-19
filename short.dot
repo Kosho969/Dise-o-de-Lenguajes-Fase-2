@@ -1,0 +1,14 @@
+digraph short {
+rankdir=LR;
+0 [ shape=square]
+1 [ shape=circle]
+2 [ shape=circle]
+3 [ shape=circle]
+4 [ shape=circle]
+5 [ shape=doublecircle]
+0->1[label="s "]
+1->2[label="h "]
+2->3[label="o "]
+3->4[label="r "]
+4->5[label="t "]
+}

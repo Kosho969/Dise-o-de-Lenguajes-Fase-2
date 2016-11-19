@@ -1,0 +1,2 @@
+boolean null : ++ double holamundo 567 0x3Al ! + } ] 
+	'a' .3e-5d "long" '\b' '\n'

@@ -1,0 +1,16 @@
+digraph double {
+rankdir=LR;
+0 [ shape=square]
+1 [ shape=circle]
+2 [ shape=circle]
+3 [ shape=circle]
+4 [ shape=circle]
+5 [ shape=circle]
+6 [ shape=doublecircle]
+0->1[label="d "]
+1->2[label="o "]
+2->3[label="u "]
+3->4[label="b "]
+4->5[label="l "]
+5->6[label="e "]
+}

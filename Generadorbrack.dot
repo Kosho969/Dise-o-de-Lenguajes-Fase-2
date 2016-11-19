@@ -1,0 +1,6 @@
+digraph Generadorbrack {
+rankdir=LR;
+0 [ shape=square]
+1 [ shape=doublecircle]
+0->1[label="] "]
+}
