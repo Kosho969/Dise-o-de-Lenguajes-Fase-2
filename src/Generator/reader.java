@@ -731,186 +731,28 @@ public class reader
 
             if (count == 6) // IGNORE, Whitespace declaration
             {
-                if (actual[0].equals("PRODUCTIONS"))
-                {
+                // TODO: Pendiente de revisar
+                // if (actual[0].equals("PRODUCTIONS"))
+                // {
+                //     error = "Correct";
+                //     count = 7;
+                //     continue;
+                // }
+
+                if (actual[1].equals(".")) {
                     error = "Correct";
                     count = 7;
                     continue;
-                }
-
-                else if (actual[0].equals("IGNORE")) // WHITESPACES declaration
-                {
-                    if (actual[1].equals("."))
-                    {
-                        error = "Correct";
-                        count = 7;
-                        continue;
-                    }
-                    else
-                    {
-                        ArrayList<String> set = new ArrayList<String>();
-                        String SimboloOCoso = "simbolo";
-                        String AddOrNot = "Add";
-                        String LexerWDId = "Ignore";
-
-                        for (int i=1; i < actual.length-1; i++)
-                        {
-                            if (SimboloOCoso.equals("simbolo"))
-                            {
-                                // System.out.println("SIMBOLO");
-                                if (test.CheckString(actual[i]))
-                                {
-                                    ArrayList<String> string  = maker.StringToSet(actual[i]);
-                                    if (AddOrNot.equals("Add"))
-                                    {
-                                        set.addAll(string);
-                                    }
-                                    else if (AddOrNot.equals("Not"))
-                                    {
-                                        set.removeAll(string);
-                                    }
-
-                                    // System.out.println("STRING");
-                                    SimboloOCoso = "coso";
-                                }
-                                else if (test.CheckIdent(actual[i]))
-                                {
-                                    int search = LexerIds.indexOf(actual[i]);
-                                    if (search != -1 && search <= LexerSets.size())
-                                    {
-                                        if (AddOrNot.equals("Add"))
-                                        {
-                                            set.addAll(LexerSets.get(search));
-                                        }
-                                        else if (AddOrNot.equals("Not"))
-                                        {
-                                            set.removeAll(LexerSets.get(search));
-                                        }
-                                    }
-                                    System.out.println("IDENT");
-                                    SimboloOCoso = "coso";
-                                }
-                                else if (test.CheckChara(actual[i]))
-                                {
-                                    System.out.println("CHARA HASTA AHORA");
-                                    SimboloOCoso = "coso";
-                                    set.add(String.valueOf(actual[i].charAt(1)));
-
-                                    if (i<actual.length)
-                                    {
-                                        if (actual[i+1].equals(".."))
-                                        {
-                                            if (i<actual.length)
-                                            {
-                                                if (test.CheckChara(actual[i+2]))   
-                                                {
-                                                    maker.CharasToSet(actual[i], actual[i+2]);
-                                                    ArrayList<String> string  = maker.CharasToSet(actual[i], actual[i+2]);
-                                                    if (AddOrNot.equals("Add"))
-                                                    {
-                                                        set.addAll(string);
-                                                    }
-                                                    else if (AddOrNot.equals("Not"))
-                                                    {
-                                                        set.removeAll(string);
-                                                    }
-
-                                                    i = i+2;
-                                                    SimboloOCoso = "coso";
-                                                }
-                                                else
-                                                {
-                                                    //Char not valid after .. 
-                                                    error="Error, Char not valid after '..', line: " + String.valueOf(numbah.get(lin));
-                                                    System.out.println(error);
-                                                    System.exit(0);
-                                                }
-                                            }
-                                            else
-                                            {
-                                                //Char missing after ..
-                                                error="Error, Char missing after '..', line: " + String.valueOf(numbah.get(lin));
-                                                System.out.println(error);
-                                                System.exit(0);
-                                            }
-                                        }
-                                        else if (actual[i+1].equals("+"))
-                                        {
-                                            AddOrNot = "Add";
-                                            SimboloOCoso = "coso";
-                                        }
-                                        else if (actual[i+1].equals("-"))
-                                        {
-                                            AddOrNot = "Not";
-                                            SimboloOCoso = "coso";
-                                        }
-                                        else if  (actual[i+1].equals("."))
-                                        {
-                                            //correct
-                                            error = "Correct";
-                                            System.out.println("POINT FOUND");
-                                        }
-                                        else
-                                        {
-                                            // .. or +,- operator expected
-                                            error="Error, '..' or '+','-' operator expected, line: " + String.valueOf(numbah.get(lin));
-                                            System.out.println(error);
-                                            System.exit(0);
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    //can't find simbol
-                                    error="Error, cannot find symbol, line: " + String.valueOf(numbah.get(lin));
-                                    System.out.println(error);
-                                    System.exit(0);
-                                }
-                            }
-                            else if (SimboloOCoso.equals("coso"))
-                            {
-                                System.out.println("COSO");
-                                if (actual[i].equals("+"))
-                                {
-                                    AddOrNot = "Add";
-                                    SimboloOCoso = "simbolo";
-                                }
-                                else if (actual[i].equals("-"))
-                                {
-                                    AddOrNot = "Not";
-                                    SimboloOCoso = "simbolo";
-                                }
-                                else
-                                {
-                                    //operator not valid
-                                    error="Error, operator not valid, line: " + String.valueOf(numbah.get(lin));
-                                    System.out.println(error);
-                                    System.exit(0);
-                                }
-                            }
-                        }
-                        ArrayList<String> list = new ArrayList<String>(new LinkedHashSet<String>(set));
-                        LexerWhitespaceDeclarationSet = list;
-                        AFD toAdd = maker.CharacterSetToAFD(list, LexerWDId);
-                        LexerWDAFD = toAdd;
-
-                        if (actual[actual.length-1].equals("."))
-                        {
-                            //correct
-                            error = "Correct";
-                            System.out.println("POINT FOUND");
-                        }
-                        else
-                        {
-                            // point missing
-                            error="Error, '.' expected at end of line, line: " + String.valueOf(numbah.get(lin));
-                            System.out.println(error);
-                            System.exit(0);
-                        }
-
-                        count = 7;
-                        continue;
-                    }
+                } else {
+                    processWhiteSpaceDeclaration(
+                        actual,
+                        numbah,
+                        lin,
+                        test,
+                        LexerIds,
+                        maker,
+                        LexerSets
+                    );
                 }
             }
 
@@ -1104,9 +946,6 @@ public class reader
 
         boolean enable = false;
 
-        System.out.println(LexerWhitespaceDeclarationSet.size());
-        System.exit(0);
-
         // TODO: Evaluar si esto debe irse a la fregada
         if (LexerWhitespaceDeclarationSet.size() == 0)
         {
@@ -1139,6 +978,12 @@ public class reader
         Lex.GenerarAnalizador();
     }
 
+    public static void dieWithMessage(String message, int lineNumber) {
+        System.out.println(message);
+        System.out.println("Source line: " + lineNumber);
+        System.exit(0);
+    }
+
     public static void coolAssert(boolean expression, String message, int lineNumber)
     {
         if (!expression) {
@@ -1146,5 +991,130 @@ public class reader
             System.out.println("Source line: " + lineNumber);
             System.exit(0);
         }
+    }
+
+    public static void processWhiteSpaceDeclaration(
+        String[] actual,
+        ArrayList<Integer> numbah,
+        int lin,
+        Vocabulary vocabulary,
+        ArrayList<String> LexerIds,
+        AutMaker maker,
+        ArrayList<ArrayList<String>> LexerSets
+    ) {
+        ArrayList<String> set = new ArrayList<String>();
+        String SimboloOCoso = "simbolo";
+        String AddOrNot = "Add";
+        String LexerWDId = "Ignore";
+
+        for (int i = 0; i < actual.length - 1; i++)
+        {
+            if (SimboloOCoso.equals("simbolo"))
+            {
+                // Chequear si es string de COCOL, por ejemplo: "cualquier cosa"
+                if (vocabulary.CheckString(actual[i]))
+                {
+                    ArrayList<String> string = maker.StringToSet(actual[i]);
+                    if (AddOrNot.equals("Add")) {
+                        set.addAll(string);
+                    } else if (AddOrNot.equals("Not")) {
+                        set.removeAll(string);
+                    }
+
+                    SimboloOCoso = "coso";
+                } else if (vocabulary.CheckIdent(actual[i])) {
+                    // Chequear si es identificador de COCOL, por ejemplo: lf
+                    int search = LexerIds.indexOf(actual[i]);
+
+                    if (search != -1 && search <= LexerSets.size())
+                    {
+                        if (AddOrNot.equals("Add")) {
+                            set.addAll(LexerSets.get(search));
+                        } else if (AddOrNot.equals("Not")) {
+                            set.removeAll(LexerSets.get(search));
+                        }
+                    }
+
+                    SimboloOCoso = "coso";
+                } else if (vocabulary.CheckChara(actual[i])) {
+                    // Chequear si es caracter de COCOL, por ejemplo CHR(09)
+                    SimboloOCoso = "coso";
+
+                    set.add(String.valueOf(actual[i].charAt(1)));
+
+                    // TODO: Revisar si podemos remover esta condición
+                    if (i < actual.length)
+                    {
+                        if (actual[i + 1].equals(".."))
+                        {
+                            coolAssert(
+                                i < actual.length,
+                                "Error, Char missing after '..'",
+                                numbah.get(lin)
+                            );
+
+                            coolAssert(
+                                vocabulary.CheckChara(actual[i+2]),
+                                "Error, Char not valid after '..'",
+                                numbah.get(lin)
+                            );
+
+                            maker.CharasToSet(actual[i], actual[i + 2]);
+                            ArrayList<String> string = maker.CharasToSet(actual[i], actual[i + 2]);
+
+                            if (AddOrNot.equals("Add")) {
+                                set.addAll(string);
+                            } else if (AddOrNot.equals("Not")) {
+                                set.removeAll(string);
+                            }
+
+                            i = i+2;
+                            SimboloOCoso = "coso";
+                        } else if (actual[i + 1].equals("+")) {
+                            AddOrNot = "Add";
+                            SimboloOCoso = "coso";
+                        } else if (actual[i + 1].equals("-")) {
+                            AddOrNot = "Not";
+                            SimboloOCoso = "coso";
+                        } else if (actual[i + 1].equals(".")) {
+                            // Todo bien
+                        } else {
+                            // .. or +,- operator expected
+                            dieWithMessage("Error, '..' or '+','-' operator expected", numbah.get(lin));
+                        }
+                    }
+                } else {
+                    // can't find simbol
+                    dieWithMessage("Error, cannot find symbol", numbah.get(lin));
+                }
+            } else if (SimboloOCoso.equals("coso")) {
+                if (actual[i].equals("+")) {
+                    AddOrNot = "Add";
+                    SimboloOCoso = "simbolo";
+                } else if (actual[i].equals("-")) {
+                    AddOrNot = "Not";
+                    SimboloOCoso = "simbolo";
+                } else {
+                    dieWithMessage("Error, operator not valid", numbah.get(lin));
+                }
+            }
+        }
+
+        // ArrayList<String> list = new ArrayList<String>(new LinkedHashSet<String>(set));
+        // LexerWhitespaceDeclarationSet = list;
+        // AFD toAdd = maker.CharacterSetToAFD(list, LexerWDId);
+        // LexerWDAFD = toAdd;
+
+        coolAssert(
+            actual[actual.length-1].equals("."),
+            "Error, '.' expected at end of line",
+            numbah.get(lin)
+        );
+
+        dieWithMessage("Completao venao", 1);
+
+        // TODO: Evaluar si debo retornar este count
+        // count = 7;
+        // continue;
     }
 }
