@@ -64,6 +64,7 @@ public class reader
         line = in.readLine();
         String error = "Error";
         String id = "";
+        String LexerWDId = "Ignore";
 
         while (line != null)
         {
@@ -84,14 +85,7 @@ public class reader
             //"[ ]+(?=([^\"]*\"(?:\"|[^\"])*\")*[^\"]*$)" vieja
             // (?:(['"])(.*?)(?<!\\)(?>\\\\)*\1|([^\s]+)) try
             String[] set = leer.split("[ ]+(?=([^\\\"]*\\\"(?:\\\"|[^\\\"])*\\\")*[^\\\"]*$)");
-
-           // Debugging stuff
-           // for (String s : set)
-           // {
-           //     System.out.println(s);
-           // }
-
-           words.add(set);
+            words.add(set);
         }
 
         count = 1;
@@ -744,7 +738,7 @@ public class reader
                     count = 7;
                     continue;
                 } else {
-                    processWhiteSpaceDeclaration(
+                    ArrayList<String> list = processWhiteSpaceDeclaration(
                         actual,
                         numbah,
                         lin,
@@ -753,6 +747,13 @@ public class reader
                         maker,
                         LexerSets
                     );
+
+                    LexerWhitespaceDeclarationSet = list;
+                    AFD toAdd = maker.CharacterSetToAFD(list, LexerWDId);
+                    LexerWDAFD = toAdd;
+
+                    count = 7;
+                    continue;
                 }
             }
 
@@ -761,18 +762,15 @@ public class reader
             {
                 String cabeza = "";
                 ArrayList<String> cuerpo = new ArrayList<String>();
-                
+
                 System.out.println("PRODUCTIONS");
-                if (actual[0].equals("END"))
-                {
+                if (actual[0].equals("END")) {
                     error = "correct";
                     count = 8;
                     continue;
-                }
-                else if (test.CheckIdent(actual[0]))
-                {
+                } else if (test.CheckIdent(actual[0])) {
                     cabeza = actual[0];
-                     
+
                     System.out.println("CABEZA");
                     if (test.CheckAttribute(actual[1]))
                     {
@@ -846,7 +844,6 @@ public class reader
                             cuerpo = TE;
                         }
                     }
-                        
                 }
 
                 if (cabeza.equals("") == false)
@@ -932,15 +929,20 @@ public class reader
             LexerTokenAFD.add(aut);
         }
 
-        for (String s : LexerWhitespaceDeclarationSet)
-        {
-            if (s.equals(String.valueOf((char) 10)))
-            {
+        for (int i = 0; i < LexerWhitespaceDeclarationSet.size(); i++) {
+            String s = LexerWhitespaceDeclarationSet.get(i); 
+            // Si es new line, escapear
+            if (s.equals(String.valueOf((char) 10))) {
                 s = "\\" +"n";
-            }
-            else if (s.equals(String.valueOf((char) 13)))
-            {
+                LexerWhitespaceDeclarationSet.set(i, s);
+            } else if (s.equals(String.valueOf((char) 13))) {
+                // Si es carriage return, escapear
                 s = "\\"+"r";
+                LexerWhitespaceDeclarationSet.set(i, s);
+            } else if (s.equals(String.valueOf((char) 9))) {
+                // Si es tab, escapear
+                s = "\\"+"t";
+                LexerWhitespaceDeclarationSet.set(i, s);
             }
         }
 
@@ -993,7 +995,7 @@ public class reader
         }
     }
 
-    public static void processWhiteSpaceDeclaration(
+    public static ArrayList<String> processWhiteSpaceDeclaration(
         String[] actual,
         ArrayList<Integer> numbah,
         int lin,
@@ -1005,7 +1007,6 @@ public class reader
         ArrayList<String> set = new ArrayList<String>();
         String SimboloOCoso = "simbolo";
         String AddOrNot = "Add";
-        String LexerWDId = "Ignore";
 
         for (int i = 0; i < actual.length - 1; i++)
         {
@@ -1100,21 +1101,12 @@ public class reader
             }
         }
 
-        // ArrayList<String> list = new ArrayList<String>(new LinkedHashSet<String>(set));
-        // LexerWhitespaceDeclarationSet = list;
-        // AFD toAdd = maker.CharacterSetToAFD(list, LexerWDId);
-        // LexerWDAFD = toAdd;
-
         coolAssert(
-            actual[actual.length-1].equals("."),
+            actual[actual.length - 1].equals("."),
             "Error, '.' expected at end of line",
             numbah.get(lin)
         );
 
-        dieWithMessage("Completao venao", 1);
-
-        // TODO: Evaluar si debo retornar este count
-        // count = 7;
-        // continue;
+        return new ArrayList<String>(new LinkedHashSet<String>(set));
     }
 }
