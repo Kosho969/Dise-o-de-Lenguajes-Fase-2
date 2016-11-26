@@ -14,17 +14,17 @@ public class AnalizadorLexico
 {
     public static void main(String[] args) throws FileNotFoundException, IOException
     {
-        ArrayList<String> WhiteSpaceAL = new ArrayList<String>(Arrays.asList("\n","\r","\t"," "));
+        ArrayList<String> WhiteSpaceAL = new ArrayList<String>(Arrays.asList("\n","\r"," ","    "));
  
-        boolean[] EKTokenAL = {false, false, false, false, false, true};
+        boolean[] EKTokenAL = {true, true, false};
  
-        ArrayList<String> KeyRegexAL = new ArrayList<String>(Arrays.asList("«bÇoÇoÇlÇeÇaÇn»","«bÇyÇtÇe»","«cÇhÇaÇr»","«cÇlÇaÇsÇs»","«dÇoÇuÇbÇlÇe»","«fÇaÇlÇsÇe»","«fÇiÇnÇaÇl»","«fÇlÇoÇaÇt»","«iÇnÇt»","«lÇoÇnÇg»","«nÇeÇw»","«nÇuÇlÇl»","«sÇhÇoÇrÇt»","«sÇtÇaÇtÇiÇc»","«sÇuÇpÇeÇr»","«tÇhÇiÇs»","«tÇrÇuÇe»","«vÇoÇiÇd»","«:»","«,»","«-Ç-»","«.»","«+Ç+»","«{»","«[»","«(»","«-»","«!»","«+»","«}»","«]»","«)»"));
+        ArrayList<String> KeyRegexAL = new ArrayList<String>(Arrays.asList("«wÇhÇiÇlÇe»","«dÇo»","«;»","«=»"));
  
-        ArrayList<String> KeyIdsAL = new ArrayList<String>(Arrays.asList("boolean","byte","char","class","double","false","final","float","int","long","new","null","short","static","super","this","true","void","colon","comma","dec","dot","inc","lbrace","lbrack","lpar","minus","not","plus","rbrace","rbrack","rpar"));
+        ArrayList<String> KeyIdsAL = new ArrayList<String>(Arrays.asList("while","do","semicolon","equals"));
  
-        ArrayList<String> TokenRegexAL = new ArrayList<String>(Arrays.asList("«aØbØcØdØeØfØgØhØiØjØkØlØmØnØoØpØqØrØsØtØuØvØwØxØyØzØAØBØCØDØEØFØGØHØIØJØKØLØMØNØOØPØQØRØSØTØUØVØWØXØYØZ»Ç««aØbØcØdØeØfØgØhØiØjØkØlØmØnØoØpØqØrØsØtØuØvØwØxØyØzØAØBØCØDØEØFØGØHØIØJØKØLØMØNØOØPØQØRØSØTØUØVØWØXØYØZ»Ø«0Ø1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9»»º","««0»Ø«1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9»Ç««0Ø1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9»»ºØ««0Çx»Ø«0ÇX»»Ç«0Ø1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9ØAØBØCØDØEØFØaØbØcØdØeØf»Ç««0Ø1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9ØAØBØCØDØEØFØaØbØcØdØeØf»»ºØ0Ç«0Ø1Ø2Ø3Ø4Ø5Ø6Ø7»Ç««0Ø1Ø2Ø3Ø4Ø5Ø6Ø7»»º»Ç«««l»Ø«L»»Ø~»","«.»Ç«0Ø1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9»Ç««0Ø1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9»»ºÇ««««e»Ø«E»»Ç«««+»Ø«-»»Ø~»Ç«0Ø1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9»Ç««0Ø1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9»»º»Ø~»Ç«««F»Ø«f»Ø«D»Ø«d»»Ø~»Ø«0Ø1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9»Ç««0Ø1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9»»ºÇ««.»Ç««0Ø1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9»»ºÇ««««e»Ø«E»»Ç«««+»Ø«-»»Ø~»Ç«0Ø1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9»Ç««0Ø1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9»»º»Ø~»Ç«««F»Ø«f»Ø«D»Ø«d»»Ø~»Ø««e»Ø«E»»Ç«««+»Ø«-»»Ø~»Ç«0Ø1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9»Ç««0Ø1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9»»ºÇ«««F»Ø«f»Ø«D»Ø«d»»Ø~»Ø«F»Ø«f»Ø«D»Ø«d»»","«'»Ç««aØbØcØdØeØfØgØhØiØjØkØlØmØnØoØpØqØrØsØtØuØvØwØxØyØzØAØBØCØDØEØFØGØHØIØJØKØLØMØNØOØPØQØRØSØTØUØVØWØXØYØZØ0Ø1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9Ø Ø!Ø%Ø^Ø&Ø=Ø?Ø>Ø<Ø:Ø.Ø,Ø(Ø[Ø{Ø)Ø$Ø]Ø}Ø-Ø+Ø\\Ø\"»Ø«\\»Ç««b»Ø«t»Ø«n»Ø«f»Ø«r»Ø«\"»Ø«\\Ç'»Ø«\\»Ø«u»Ç««u»»ºÇ«0Ø1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9ØAØBØCØDØEØFØaØbØcØdØeØf»Ç«0Ø1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9ØAØBØCØDØEØFØaØbØcØdØeØf»Ç«0Ø1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9ØAØBØCØDØEØFØaØbØcØdØeØf»Ç«0Ø1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9ØAØBØCØDØEØFØaØbØcØdØeØf»Ø«0Ø1Ø2Ø3»Ç«««0Ø1Ø2Ø3Ø4Ø5Ø6Ø7»»Ø~»Ç«««0Ø1Ø2Ø3Ø4Ø5Ø6Ø7»»Ø~»Ø«0Ø1Ø2Ø3Ø4Ø5Ø6Ø7»Ç«««0Ø1Ø2Ø3Ø4Ø5Ø6Ø7»»Ø~»»»Ç«'»","«\"»Ç««aØbØcØdØeØfØgØhØiØjØkØlØmØnØoØpØqØrØsØtØuØvØwØxØyØzØAØBØCØDØEØFØGØHØIØJØKØLØMØNØOØPØQØRØSØTØUØVØWØXØYØZØ0Ø1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9Ø Ø!Ø%Ø^Ø&Ø=Ø?Ø>Ø<Ø:Ø.Ø,Ø(Ø[Ø{Ø)Ø$Ø]Ø}Ø-Ø+Ø'Ø\\»Ø«\\»Ç««b»Ø«t»Ø«n»Ø«f»Ø«r»Ø«\\Ç'»Ø«\\»Ø«u»Ç««u»»ºÇ«0Ø1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9ØAØBØCØDØEØFØaØbØcØdØeØf»Ç«0Ø1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9ØAØBØCØDØEØFØaØbØcØdØeØf»Ç«0Ø1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9ØAØBØCØDØEØFØaØbØcØdØeØf»Ç«0Ø1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9ØAØBØCØDØEØFØaØbØcØdØeØf»Ø«0Ø1Ø2Ø3»Ç«««0Ø1Ø2Ø3Ø4Ø5Ø6Ø7»»Ø~»Ç«««0Ø1Ø2Ø3Ø4Ø5Ø6Ø7»»Ø~»Ø«0Ø1Ø2Ø3Ø4Ø5Ø6Ø7»Ç«««0Ø1Ø2Ø3Ø4Ø5Ø6Ø7»»Ø~»»»ºÇ«\"»"));
+        ArrayList<String> TokenRegexAL = new ArrayList<String>(Arrays.asList("«aØbØcØdØeØfØgØhØiØjØkØlØmØnØoØpØqØrØsØtØuØvØwØxØyØzØAØBØCØDØEØFØGØHØIØJØKØLØMØNØOØPØQØRØSØTØUØVØWØXØYØZ»Ç««aØbØcØdØeØfØgØhØiØjØkØlØmØnØoØpØqØrØsØtØuØvØwØxØyØzØAØBØCØDØEØFØGØHØIØJØKØLØMØNØOØPØQØRØSØTØUØVØWØXØYØZ»Ø«0Ø1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9»»º","«0Ø1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9»Ç««0Ø1Ø2Ø3Ø4Ø5Ø6Ø7Ø8Ø9»»º"));
  
-        ArrayList<String> TokenIdsAL = new ArrayList<String>(Arrays.asList("ident","intLit","floatLit","charLit","stringLit"));
+        ArrayList<String> TokenIdsAL = new ArrayList<String>(Arrays.asList("ident","number"));
  
         AutMaker maker = new AutMaker();
         ArrayList<AFD> KeyAuts = new ArrayList<AFD>();
