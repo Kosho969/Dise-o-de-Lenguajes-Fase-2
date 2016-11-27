@@ -25,7 +25,7 @@ public class reader
         int linea = 1;
         String NOMBRE = "";
 
-        in = new BufferedReader(new FileReader("Java.txt"));
+        in = new BufferedReader(new FileReader("C#.txt"));
         ArrayList<String> saved = new ArrayList<String>();
         ArrayList<String[]> words = new ArrayList<String[]>();
         ArrayList<Integer> numbah = new ArrayList<Integer>();
@@ -949,15 +949,12 @@ public class reader
         boolean enable = false;
 
         // TODO: Evaluar si esto debe irse a la fregada
-        if (LexerWhitespaceDeclarationSet.size() == 0)
-        {
+        if (LexerWhitespaceDeclarationSet.size() == 0) {
             LexerWhitespaceDeclarationSet.add("\\n");
             LexerWhitespaceDeclarationSet.add("\\r");
             LexerWhitespaceDeclarationSet.add(" ");
             LexerWhitespaceDeclarationSet.add("    ");
-        }
-        else
-        {
+        } else {
             enable = false;
         }
 
